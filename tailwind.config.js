@@ -5,6 +5,7 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       backgroundImage: {
@@ -12,6 +13,16 @@ module.exports = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+    },
+    colors: {
+      'primary': '#0ea5e9',
+      'secondary': '#7dd3fc',
+      'fgcolor': '#f8fafc',
+      'fgcolor-dark': '#1e293b',
+      'bgcolor': '#e2e8f0',
+      'bgcolor-dark': '#020617',
+      'white': '#f8fafc',
+      'black': '#020617',
     },
   },
   plugins: [],

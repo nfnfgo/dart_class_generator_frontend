@@ -1,6 +1,10 @@
-import './globals.css'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import './globals.css';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+
+// Components
+import { BackgroundNoSsr } from '@/components/background';
+import { classNames } from '@/tools/css_tools';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,8 +19,20 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className='flex h-screen w-screen'>
+      <body className={classNames(
+        inter.className,
+        'flex h-full w-full',
+      )}>
+        <BackgroundNoSsr className={
+          classNames(
+            'flex flex-col',
+            'h-full w-full',
+          )
+        }>
+          {children}
+        </BackgroundNoSsr>
+      </body>
     </html>
   )
 }
