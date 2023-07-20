@@ -15,24 +15,28 @@ export default function Home() {
       )}>
         {/* Title Bar */}
         <Container className={classNames(
-          'flex min-h-fit w-full h-full',
+          'flex w-full h-full',
           'px-5 py-3',
         )}>
           <div className={classNames(
-            'flex flex-row items-center'
+            'flex flex-row flex-wrap gap-y-4 items-center',
+            'w-full h-full',
+            'justify-between',
           )}>
-            <p className={classNames(
-              'font-bold text-lg',
-            )}>
-              Dart Class Generator
-            </p>
-            <p className={classNames(
-              'px-3 text-primary',
-              'font-mono text-sm font-semibold',
-              'self-start'
-            )}>
-              (Bata)
-            </p>
+            <div className='flex flex-row'>
+              <p className={classNames(
+                'font-bold text-lg',
+              )}>
+                Dart Class Generator
+              </p>
+              <p className={classNames(
+                'px-3 text-primary',
+                'font-mono text-sm font-semibold',
+                'self-start'
+              )}>
+                (Beta)
+              </p>
+            </div>
             <DarkModeButton></DarkModeButton>
           </div>
         </Container>

@@ -35,12 +35,12 @@ function DarkModeButtonItem({ targetDarkMode }: { targetDarkMode: boolean | null
     }
 
     return (<>
-        <Container className={classNames(
-            targetDarkMode === curDarkMode ? 'bg-black text-white dark:bg-white dark:text-black' : '',
-            'px-3 py-2',
-        )}>
+        <Container hoverColor={true}>
             <button onClick={onClick}
-
+                className={classNames(
+                    targetDarkMode === curDarkMode ? 'bg-black text-white dark:bg-white dark:text-black' : '',
+                    'px-3 py-1'
+                )}
             >
                 {/* Show the Mode String based on the target mode */}
                 {(() => {
