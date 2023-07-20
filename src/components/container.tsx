@@ -49,7 +49,7 @@ export function Container({
             className,
         )}>
             <div className={classNames(
-                'flex flex-auto',
+                'flex flex-auto h-full w-full',
                 padding ? 'px-4 py-2' : '',
                 hoverColor ? "hover:bg-black/5 dark:hover:bg-black/20 transition-colors" : '',
             )}>
