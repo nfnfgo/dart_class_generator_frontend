@@ -3,6 +3,7 @@ import { Container } from '@/components/container';
 import { DarkModeButton } from './darkmode_button';
 import { OutputArea } from './output_area';
 import { TriggerGenerateButton } from './generate_button';
+import { SettingBoard } from './setting_board';
 
 // Tools
 import { classNames } from '@/tools/css_tools';
@@ -12,14 +13,14 @@ export default function Home() {
     <>
       {/* Root Padding Container */}
       <div className={classNames(
-        'flex flex-col',
+        'flex flex-none flex-col',
         'w-full h-full',
         'px-5 py-5',
         'md:px-10 md:py-5',
       )}>
         {/* Title Bar */}
         <Container className={classNames(
-          'flex flex-init flex-shrink-0',
+          'flex flex-none',
           'w-full h-auto',
         )}>
           <div className={classNames(
@@ -46,22 +47,18 @@ export default function Home() {
         </Container>
         {/* Body Part */}
         <div className={classNames(
-          'flex flex-auto flex-row',
+          'flex flex-row flex-auto flex-grow-0',
           'h-full w-full',
           'gap-5 mt-5',
+          'min-h-0',
         )}>
           {/* Settings Area */}
           <div className={classNames(
-            'flex flex-col',
+            'flex flex-auto flex-col',
             'w-full h-full',
           )}>
-            <Container className={classNames(
-              'w-full h-full',
-              'px-4 py-2',
-            )}>
-              Setting Area
-            </Container>
-            <div className='mt-4'>
+            <SettingBoard />
+            <div className='flex flex-none mt-4'>
               <TriggerGenerateButton></TriggerGenerateButton>
             </div>
           </div>

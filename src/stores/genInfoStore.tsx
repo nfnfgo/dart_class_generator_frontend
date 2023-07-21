@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-class MemberInfo {
+export class MemberInfo {
     constructor(identifier: string, type_name: string, default_value: string | null = null) {
         this.identifier = identifier;
         this.type_name = type_name;
@@ -36,11 +36,13 @@ class MemberInfo {
     is_list: boolean = false;
 }
 
-class ClassInfo {
+export class ClassInfo {
     constructor(classname: string | null, comment: string | null = null) {
         this.classname = classname ?? 'NewDartClass';
         this.comment = comment;
         this.member_list = [];
+        this.member_list.push(new MemberInfo('testValue1', 'num'));
+        this.member_list.push(new MemberInfo('testValue2', 'String'));
     }
     classname: string = 'TestDartClass';
     comment: string | null = null;
