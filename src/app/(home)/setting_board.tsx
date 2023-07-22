@@ -89,26 +89,27 @@ function MemberInfoSettingCard() {
 
     return (<>
         <div>
-            {member_list.map(function (memberInfo: MemberInfo, index: number) {
-                return (<>
-                    <div className={classNames(
-                        'flex flex-auto min-w-0 w-full'
-                    )}>
-                        <MemberInfoSettingTile
-                            memberInfo={memberInfo}
-                            key={index}
-                            index={index}
-                        />
-                    </div>
-                </>);
-            })}
+            <ul>
+                {member_list.map(function (memberInfo: MemberInfo, index: number) {
+                    return (
+                        <div className={classNames(
+                            'flex flex-auto min-w-0 w-full'
+                        )}
+                            key={index}>
+                            <MemberInfoSettingTile
+                                memberInfo={memberInfo}
+                                index={index}
+                            />
+                        </div>
+                    );
+                })}
+            </ul>
         </div>
     </>);
 }
 
-function MemberInfoSettingTile({ memberInfo, key, index }: {
+function MemberInfoSettingTile({ memberInfo, index }: {
     memberInfo: MemberInfo,
-    key: any,
     index: number
 }) {
     const classInfo: ClassInfo = useGenInfoStore((state) => ((state as useGenInfoStoreConfig).info));
@@ -229,7 +230,14 @@ function MemberInfoSettingTile({ memberInfo, key, index }: {
                     });
                 }}
             />
-            <BooleanSelector></BooleanSelector>
+            <BooleanInputTile
+                title='Is Class'
+                defaultValue={memberInfo.is_class}
+                onChange={(newValue: boolean | undefined) => {
+                    updateMemberInfo(function (memberInfo: MemberInfo) {
+                        memberInfo.is_class = newValue ?? false;
+                    });
+                }} />
         </div>
     </>);
 }
@@ -347,3 +355,41 @@ interface InputTileConfig {
     */
     nullIfEmpty?: boolean;
 };
+
+
+/**
+ * Input tile with title that let user choose a boolean value
+ */
+function BooleanInputTile({
+    title,
+    defaultValue,
+    onChange,
+}: BooleanInputTileConfig) {
+    return (<>
+        <div className={classNames(
+            'flex flex-row flex-auto min-w-0 w-full',
+            'justify-between items-center',
+            'px-1 py-2',
+        )}>
+            <p className={classNames(
+                'flex flex-none',
+                'font-bold',
+            )}>
+                {title}
+            </p>
+            <div className={classNames(
+                'flex flex-none',
+            )}>
+                <BooleanSelector
+                    defaultValue={defaultValue}
+                    onChange={onChange} />
+            </div>
+        </div>
+    </>);
+}
+
+interface BooleanInputTileConfig {
+    title: string;
+    defaultValue?: boolean;
+    onChange?: (value: boolean | undefined) => any;
+}

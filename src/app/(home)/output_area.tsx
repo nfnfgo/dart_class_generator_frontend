@@ -13,7 +13,8 @@ export function OutputArea({ className }: { className?: string }) {
             'font-mono',
             className ?? '',
         )}
-            value={'Generated Dart Class String Will Be Here...'}>
+            value={'Generated Dart Class String Will Be Here...'}
+            readOnly={true}>
         </textarea>
     </>);
 }
