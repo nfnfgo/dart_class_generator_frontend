@@ -2,6 +2,7 @@
 
 // Components
 import { Container } from '@/components/container';
+import { BooleanSelector } from '@/components/boolean_selector'
 
 // Tools
 import { classNames } from '@/tools/css_tools';
@@ -28,7 +29,7 @@ export function SettingBoard() {
                 <ClassInfoSettingCard />
                 <hr className={classNames(
                     'border-bgcolor dark:border-bgcolor-dark',
-                    'my-5 mx-10'
+                    'mt-5 mx-10'
                 )}></hr>
                 <MemberInfoSettingCard />
                 <TestComponent />
@@ -56,8 +57,9 @@ function ClassInfoSettingCard() {
                 title='ClassName'
                 defaultValue={classInfo.classname}
                 placeholder='Enter your classname here...'
-                onChange={function (newValue: string) {
-                    classInfo.classname = newValue;
+                nullIfEmpty={false}
+                onChange={function (newValue: string | null) {
+                    classInfo.classname = newValue ?? '';
                     updateVer();
                 }}
                 isSingleLine={true}
@@ -67,7 +69,8 @@ function ClassInfoSettingCard() {
                 title='Comment'
                 defaultValue={classInfo.comment ?? undefined}
                 placeholder='Class comment...'
-                onChange={function (newValue: string) {
+                nullIfEmpty={true}
+                onChange={function (newValue: string | null) {
                     classInfo.comment = newValue;
                     updateVer();
                 }}
@@ -86,14 +89,15 @@ function MemberInfoSettingCard() {
 
     return (<>
         <div>
-            {member_list.map(function (memberInfo: MemberInfo) {
+            {member_list.map(function (memberInfo: MemberInfo, index: number) {
                 return (<>
                     <div className={classNames(
                         'flex flex-auto min-w-0 w-full'
                     )}>
                         <MemberInfoSettingTile
                             memberInfo={memberInfo}
-                            key={memberInfo.identifier}
+                            key={index}
+                            index={index}
                         />
                     </div>
                 </>);
@@ -102,20 +106,130 @@ function MemberInfoSettingCard() {
     </>);
 }
 
-function MemberInfoSettingTile({ memberInfo, key }: {
+function MemberInfoSettingTile({ memberInfo, key, index }: {
     memberInfo: MemberInfo,
-    key: any
+    key: any,
+    index: number
 }) {
+    const classInfo: ClassInfo = useGenInfoStore((state) => ((state as useGenInfoStoreConfig).info));
+    const curVer: number = useGenInfoStore((state) => ((state as useGenInfoStoreConfig).curVer));
+    const updateVer = useGenInfoStore((state) => ((state as useGenInfoStoreConfig).updateVer));
+    const updateInfoByCallBack = useGenInfoStore((state) => ((state as useGenInfoStoreConfig).updateInfoByCallBack));
+
+    /**
+     * Change the memberinfo and sync to state
+     * 
+     * Prarms:
+     * - `callback` A function that receives a member info and do some 
+     * change directly in the received object
+     */
+    function updateMemberInfo(
+        callback: (memberInfo: MemberInfo) => (void),
+    ) {
+        let curMemberInfo: MemberInfo = classInfo.member_list[index];
+        callback(curMemberInfo);
+        updateVer();
+    }
+
     return (<>
         <div className={classNames(
-            'flex flex-auto w-full min-w-0',
+            'flex flex-col flex-auto w-full min-w-0',
         )}>
+            {/* Tag and buttons */}
+            <div className={classNames(
+                'flex flex-row w-full h-auto min-h-0',
+                'items-center',
+                'gap-x-2 mt-5',
+            )}>
+                <div className={classNames(
+                    'flex flex-auto w-full',
+                    'rounded-xl',
+                    'bg-primary/[.9] text-white',
+                    'items-center text-center',
+                    'px-3 py-2',
+                    'mt-5',
+                    'font-mono font-bold text-lg',
+                )}>
+                    Member #{index + 1}
+                </div>
+                <button>
+                    <div className={classNames(
+                        'min-w-[2rem] max-w-max',
+                        'rounded-xl',
+                        'bg-black/[.3] hover:bg-primary text-white',
+                        'transition-colors',
+                        'items-center text-center',
+                        'px-3',
+                        'mt-5'
+                    )}>
+                        COPY
+                    </div>
+                </button>
+                <button>
+                    <div className={classNames(
+                        'min-w-[2rem] max-w-max',
+                        'rounded-xl',
+                        'bg-black/[.3] hover:bg-red text-white',
+                        'transition-colors',
+                        'items-center text-center',
+                        'px-3',
+                        'mt-5'
+                    )}>
+                        REMOVE
+                    </div>
+                </button>
+            </div>
+            {/* Input Part */}
             <InputTile
-                title='VariableName'
+                title='Identifier'
                 defaultValue={memberInfo.identifier}
                 placeholder='Enter the variable name of this member...'
                 isSingleLine={true}
+                nullIfEmpty={false}
+                onChange={(newValue: string | null) => {
+                    updateMemberInfo(function (memberInfo: MemberInfo) {
+                        memberInfo.identifier = newValue ?? '';
+                    });
+                }}
             />
+            <InputTile
+                title='Type'
+                defaultValue={memberInfo.type_name}
+                placeholder='Enter the type of this member...'
+                isSingleLine={true}
+                nullIfEmpty={false}
+                onChange={(newValue: string | null) => {
+                    updateMemberInfo(function (memberInfo: MemberInfo) {
+                        memberInfo.type_name = newValue ?? '';
+                    });
+                }}
+            />
+            <InputTile
+                title='Default'
+                defaultValue={memberInfo.default_value ?? undefined}
+                placeholder='Enter the default value of this member...'
+                isSingleLine={true}
+                nullIfEmpty={true}
+                onChange={(newValue: string | null) => {
+                    updateMemberInfo(function (memberInfo: MemberInfo) {
+                        memberInfo.default_value = newValue;
+                    });
+                }}
+            />
+            <InputTile
+                title='Comment'
+                defaultValue={memberInfo.comment ?? undefined}
+                placeholder='Enter the comment of this member...'
+                isSingleLine={false}
+                resizable={true}
+                nullIfEmpty={true}
+                onChange={(newValue: string | null) => {
+                    updateMemberInfo(function (memberInfo: MemberInfo) {
+                        memberInfo.comment = newValue;
+                    });
+                }}
+            />
+            <BooleanSelector></BooleanSelector>
         </div>
     </>);
 }
@@ -146,6 +260,7 @@ function InputTile({ title,
     onChange,
     resizable,
     isSingleLine,
+    nullIfEmpty,
 }: InputTileConfig) {
     // Set default value
     if (resizable === undefined) {
@@ -158,6 +273,9 @@ function InputTile({ title,
     // resizable
     if (isSingleLine === true) {
         resizable = false;
+    }
+    if (nullIfEmpty === undefined) {
+        nullIfEmpty = true;
     }
     return (<>
         <div className={classNames(
@@ -183,7 +301,13 @@ function InputTile({ title,
                 )}
                 defaultValue={defaultValue}
                 onChange={function (event) {
-                    if (onChange !== undefined) {
+                    if (onChange === undefined) {
+                        return;
+                    }
+                    if ((nullIfEmpty === true) && (event.target.value === '')) {
+                        onChange(null);
+                    }
+                    else {
                         onChange(event.target.value);
                     }
                 }}
@@ -205,7 +329,7 @@ interface InputTileConfig {
     defaultValue?: string;
 
     /**Callback function when value changed in this InputTile */
-    onChange?: (newValue: string) => (void);
+    onChange?: (newValue: string | null) => (void);
 
     /**If input area resizeable */
     resizable?: boolean;
@@ -216,4 +340,10 @@ interface InputTileConfig {
      * set to none even if `resizable` is `true`
     */
     isSingleLine?: boolean;
+
+    /** 
+     * If the value should be considerea as `null` when there is an 
+     * empty string ("")
+    */
+    nullIfEmpty?: boolean;
 };
