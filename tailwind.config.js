@@ -23,6 +23,7 @@ module.exports = {
       'bgcolor-dark': '#020617',
       'white': '#f8fafc',
       'red': '#dc2626',
+      'red-light': '#f87171',
       'black': '#020617',
     },
   },

@@ -19,6 +19,7 @@ export function SettingBoard() {
         <Container className={classNames(
             'flex flex-auto h-full w-full',
             'overflow-y-auto',
+            'dark:[color-scheme:dark]',
         )}>
             <div className={classNames(
                 'flex flex-col',
