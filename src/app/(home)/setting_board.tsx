@@ -132,6 +132,40 @@ function MemberInfoSettingTile({ memberInfo, index }: {
         updateVer();
     }
 
+    /**
+     * Copy the memberInfo of this tile in the classInfo
+     * 
+     * Notice:
+     * - The new member will be the next of this member in the list
+     * - Calling this method will cause `classInfo` state refresh
+     */
+    function copyThisMember(): void {
+        let curMemberInfo = classInfo.member_list[index];
+        let newMemberInfo = MemberInfo.createWith(curMemberInfo);
+        // Insert the new member info at the original index
+        classInfo.member_list.splice(index, 0, newMemberInfo);
+        // Since the new memberinfo has been insert to the current 
+        // index, so the curMemberInfo will be at the inserted place 
+        // and considered as the new member at user prespective
+        curMemberInfo.identifier += '_copy';
+        // call updateVer to trigger UI refresh
+        updateVer();
+    }
+
+    /**
+     * Remove this member from the classInfo member list
+     * 
+     * Notice:
+     * - Remove operation is based on index, please make sure 
+     * `index` param is correct in this component
+     * - Calling this function will cause classInfo state change
+     */
+    function removeThisMember(): void {
+        // Insert the new member info at the original index
+        classInfo.member_list.splice(index, 1);
+        updateVer();
+    }
+
     return (<>
         <div className={classNames(
             'flex flex-col flex-auto w-full min-w-0',
@@ -146,39 +180,42 @@ function MemberInfoSettingTile({ memberInfo, index }: {
                     'flex flex-auto w-full',
                     'rounded-xl',
                     'bg-primary/[.9] text-white',
-                    'items-center text-center',
-                    'px-3 py-2',
+                    'justify-between items-center text-center',
+                    'px-2 py-2',
                     'mt-5',
                     'font-mono font-bold text-lg',
                 )}>
-                    Member #{index + 1}
+                    <div>Member #{index + 1}</div>
+                    <div className={classNames(
+                        'flex flex-row min-w-0',
+                        'gap-x-2'
+                    )}>
+                        <button onClick={copyThisMember}>
+                            <div className={classNames(
+                                'min-w-[2rem] max-w-max',
+                                'rounded-lg',
+                                'bg-black/[.3] hover:bg-primary text-white',
+                                'transition-colors',
+                                'items-center text-center',
+                                'px-3',
+                            )}>
+                                COPY
+                            </div>
+                        </button>
+                        <button onClick={removeThisMember}>
+                            <div className={classNames(
+                                'min-w-[2rem] max-w-max',
+                                'rounded-lg',
+                                'bg-black/[.3] hover:bg-red text-white',
+                                'transition-colors',
+                                'items-center text-center',
+                                'px-3',
+                            )}>
+                                REMOVE
+                            </div>
+                        </button>
+                    </div>
                 </div>
-                <button>
-                    <div className={classNames(
-                        'min-w-[2rem] max-w-max',
-                        'rounded-xl',
-                        'bg-black/[.3] hover:bg-primary text-white',
-                        'transition-colors',
-                        'items-center text-center',
-                        'px-3',
-                        'mt-5'
-                    )}>
-                        COPY
-                    </div>
-                </button>
-                <button>
-                    <div className={classNames(
-                        'min-w-[2rem] max-w-max',
-                        'rounded-xl',
-                        'bg-black/[.3] hover:bg-red text-white',
-                        'transition-colors',
-                        'items-center text-center',
-                        'px-3',
-                        'mt-5'
-                    )}>
-                        REMOVE
-                    </div>
-                </button>
             </div>
             {/* Input Part */}
             <InputTile
@@ -236,6 +273,22 @@ function MemberInfoSettingTile({ memberInfo, index }: {
                 onChange={(newValue: boolean | undefined) => {
                     updateMemberInfo(function (memberInfo: MemberInfo) {
                         memberInfo.is_class = newValue ?? false;
+                    });
+                }} />
+            <BooleanInputTile
+                title='Is List'
+                defaultValue={memberInfo.is_list}
+                onChange={(newValue: boolean | undefined) => {
+                    updateMemberInfo(function (memberInfo: MemberInfo) {
+                        memberInfo.is_list = newValue ?? false;
+                    });
+                }} />
+            <BooleanInputTile
+                title='Nullable'
+                defaultValue={memberInfo.nullable}
+                onChange={(newValue: boolean | undefined) => {
+                    updateMemberInfo(function (memberInfo: MemberInfo) {
+                        memberInfo.nullable = newValue ?? false;
                     });
                 }} />
         </div>

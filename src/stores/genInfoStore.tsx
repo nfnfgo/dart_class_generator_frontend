@@ -21,6 +21,9 @@ export class MemberInfo {
         return this;
     }
 
+    /**
+     * Create a new copy of a memberInfo instance, no `new` keyword needed
+     */
     static createWith(anoIns: MemberInfo): MemberInfo {
         let newMemberInfo: MemberInfo = new MemberInfo(anoIns.identifier, anoIns.type_name);
         newMemberInfo.copyWith(anoIns);
